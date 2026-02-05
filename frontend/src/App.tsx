@@ -38,11 +38,11 @@ function App() {
 
   const fetchPlayers = async () => {
     try {
-      const apiUrl = import.meta.env.PROD 
-        ? 'https://hot-fantasy-1.onrender.com/api/players'
-        : '/api/players';
+      const apiUrl = 'https://hot-fantasy-1.onrender.com/api/players';
+      console.log('Fetching from:', apiUrl);
       const response = await fetch(apiUrl);
       const data = await response.json();
+      console.log('Received players:', data.length);
       setPlayers(data);
       
       // Load saved progress from localStorage
@@ -81,9 +81,7 @@ function App() {
     localStorage.setItem('swipeHistory', JSON.stringify(newHistory));
     
     try {
-      const apiUrl = import.meta.env.PROD 
-        ? 'https://hot-fantasy-1.onrender.com/api/swipes'
-        : '/api/swipes';
+      const apiUrl = 'https://hot-fantasy-1.onrender.com/api/swipes';
       await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
