@@ -7,8 +7,7 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc && node -e \"import('fs').then(fs => fs.copyFileSync('src/players-data.json', 'dist/players-data.json'))\"",
-    "start": "node dist/server.js",
-    "postinstall": "npm run build"
+    "start": "node dist/server.js"
   },
   "dependencies": {
     "express": "^4.18.2",
