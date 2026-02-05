@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc && node -e \"require('fs').copyFileSync('src/players-data.json', 'dist/players-data.json')\"",
+    "build": "tsc && node -e \"import('fs').then(fs => fs.copyFileSync('src/players-data.json', 'dist/players-data.json'))\"",
     "start": "node dist/server.js",
     "postinstall": "npm run build"
   },
