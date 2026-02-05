@@ -90,6 +90,16 @@ function App() {
           playerId: player.id,
           direction
         })
+      });
+    } catch (error) {
+      console.error('Error recording swipe:', error);
+    }
+  };
+
+  const handleUndo = () => {
+    if (swipeHistory.length === 0) return;
+    
+    const lastSwipe = swipeHistory[swipeHistory.length - 1];
     const newHistory = swipeHistory.slice(0, -1);
     const newTeam = lastSwipe.direction === 'right' 
       ? team.filter(p => p.id !== lastSwipe.player.id)
@@ -105,17 +115,17 @@ function App() {
     // Save to localStorage
     localStorage.setItem('currentIndex', lastSwipe.index.toString());
     localStorage.setItem('team', JSON.stringify(newTeam));
-    localStorage.setItem('swipeHistory', JSON.stringify(newHistory)
-    // Remove from history
-    setSwipeHistory(prev => prev.slice(0, -1));
-    
-    // Remove from team if it was a right swipe
-    if (lastSwipe.direction === 'right') {
-      setTeam(prev => prev.filter(p => p.id !== lastSwipe.player.id));
-    }
-    
-    // Go back to previous index
-    setCurrentIndex(lastSwipe.index);
+    localStorage.setItem('swipeHistory', JSON.stringify(newHistory));
+  };
+
+  const handleReset = () => {
+    setCurrentIndex(0);
+    setTeam([]);
+    setSwipeHistory([]);
+    setShowHint(true);
+    localStorage.removeItem('currentIndex');
+    localStorage.removeItem('team');
+    localStorage.removeItem('swipeHistory');
   };
 
   const currentPlayer = players[currentIndex];
