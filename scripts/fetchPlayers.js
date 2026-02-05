@@ -303,80 +303,35 @@ function fetchWikipediaPhoto(playerName) {
   });
 }
 
-// Function to query TheSportsDB API with multiple search strategies
+// Function to query TheSportsDB API
 function fetchPlayerPhoto(playerName) {
-  return new Promise(async (resolve) => {
-    // Try different name variations
-    const nameParts = playerName.split(' ');
-    const nameWithoutHyphens = playerName.replace(/-/g, ' '); // Remove hyphens
-    const searchVariations = [
-      playerName, // Full name: "Marcus Smith"
-      nameWithoutHyphens, // Without hyphens: "Feyi Waboso" instead of "Feyi-Waboso"
-      nameParts.filter(n => n.length > 2).join(' '), // Remove short names
-      nameParts.length > 1 ? `${nameParts[nameParts.length - 1]}, ${nameParts[0]}` : playerName, // "Smith, Marcus"
-      nameParts.length > 2 ? `${nameParts[0]} ${nameParts[nameParts.length - 1]}` : playerName, // First and last only
-      nameParts[nameParts.length - 1] // Last name only as fallback
-    ];
+  return new Promise((resolve) => {
+    const url = `https://www.thesportsdb.com/api/v1/json/3/searchplayers.php?p=${encodeURIComponent(playerName)}`;
     
-    // Remove duplicates
-    const uniqueVariations = [...new Set(searchVariations)];
-    
-    for (const variation of uniqueVariations) {
-      const url = `https://www.thesportsdb.com/api/v1/json/3/searchplayers.php?p=${encodeURIComponent(variation)}`;
-      
-      const result = await new Promise((searchResolve) => {
-        https.get(url, (res) => {
-          let data = '';
-          res.on('data', (chunk) => { data += chunk; });
-          res.on('end', () => {
-            try {
-              const json = JSON.parse(data);
-              if (json.player && json.player.length > 0) {
-                // Find rugby player specifically
-                const rugbyPlayer = json.player.find(p => 
-                  p.strSport === 'Rugby' || p.strSport === 'Rugby Union' || p.strSport === 'Rugby League'
-                );
-                
-                if (rugbyPlayer) {
-                  // Prefer cutout over thumb, or use thumb if cutout not available
-                  const photo = rugbyPlayer.strCutout || rugbyPlayer.strThumb || rugbyPlayer.strFanart1;
-                  if (photo) {
-                    searchResolve({ found: true, photo });
-                    return;
-                  }
-                }
-                
-                // If no rugby player found, try any player with an image
-                const anyPlayerWithImage = json.player.find(p => p.strThumb || p.strCutout);
-                if (anyPlayerWithImage) {
-                  const photo = anyPlayerWithImage.strCutout || anyPlayerWithImage.strThumb;
-                  if (photo) {
-                    searchResolve({ found: true, photo });
-                    return;
-                  }
-                }
-              }
-              searchResolve({ found: false });
-            } catch (e) {
-              searchResolve({ found: false });
+    https.get(url, (res) => {
+      let data = '';
+      res.on('data', (chunk) => { data += chunk; });
+      res.on('end', () => {
+        try {
+          const json = JSON.parse(data);
+          if (json.player && json.player.length > 0) {
+            // Find rugby player specifically
+            const rugbyPlayer = json.player.find(p => p.strSport === 'Rugby');
+            if (rugbyPlayer && rugbyPlayer.strThumb) {
+              resolve({ found: true, photo: rugbyPlayer.strThumb, cutout: rugbyPlayer.strCutout });
+            } else {
+              resolve({ found: false });
             }
-          });
-        }).on('error', () => {
-          searchResolve({ found: false });
-        });
+          } else {
+            resolve({ found: false });
+          }
+        } catch (e) {
+          resolve({ found: false });
+        }
       });
-      
-      if (result.found) {
-        resolve(result);
-        return;
-      }
-      
-      // Small delay between variations
-      await new Promise(r => setTimeout(r, 50));
-    }
-    
-    // No photo found with any variation
-    resolve({ found: false });
+    }).on('error', () => {
+      resolve({ found: false });
+    });
   });
 }
 
@@ -385,13 +340,25 @@ async function processAllPlayers() {
   const allPlayers = [];
   let playersWithPhotos = 0;
   let playersWithoutPhotos = 0;
+  let wikipediaPhotos = 0;
+  let sportsDbPhotos = 0;
 
   for (const [country, players] of Object.entries(squads)) {
     console.log(`\nProcessing ${country}...`);
     
     for (const player of players) {
-      // Search TheSportsDB with multiple name variations
-      const photo = await fetchPlayerPhoto(player.name);
+      // Try Wikipedia first
+      let photo = await fetchWikipediaPhoto(player.name);
+      
+      if (photo.found) {
+        wikipediaPhotos++;
+      } else {
+        // Fall back to TheSportsDB
+        photo = await fetchPlayerPhoto(player.name);
+        if (photo.found) {
+          sportsDbPhotos++;
+        }
+      }
       
       const playerData = {
         name: player.name,
@@ -406,20 +373,22 @@ async function processAllPlayers() {
       
       if (photo.found) {
         playersWithPhotos++;
-        console.log(`✓ ${player.name} - Photo found`);
+        console.log(`✓ ${player.name} - Photo found (${photo.source || 'TheSportsDB'})`);
       } else {
         playersWithoutPhotos++;
         console.log(`✗ ${player.name} - No photo available`);
       }
       
-      // Rate limit: wait 200ms between players (multiple searches per player now)
-      await new Promise(resolve => setTimeout(resolve, 200));
+      // Rate limit: wait 1000ms between requests to completely avoid throttling
+      await new Promise(resolve => setTimeout(resolve, 1000));
     }
   }
 
   console.log(`\n========================================`);
   console.log(`Total players: ${allPlayers.length}`);
   console.log(`With real photos: ${playersWithPhotos}`);
+  console.log(`  - From Wikipedia: ${wikipediaPhotos}`);
+  console.log(`  - From TheSportsDB: ${sportsDbPhotos}`);
   console.log(`Without photos: ${playersWithoutPhotos}`);
   console.log(`========================================\n`);
 
