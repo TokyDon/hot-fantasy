@@ -10,6 +10,7 @@ export interface Player {
   team: string;
   position: string;
   imageUrl: string;
+  hasRealPhoto: boolean;
   stats: {
     points?: number;
     goals?: number;

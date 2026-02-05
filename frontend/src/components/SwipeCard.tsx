@@ -86,7 +86,20 @@ export default function SwipeCard({ player, onSwipe }: SwipeCardProps) {
       }}
       onTouchEnd={handleEnd}
     >
-      <div className="card-image" style={{ backgroundImage: `url(${player.imageUrl})` }}>
+      <div className="card-image" style={player.hasRealPhoto ? { backgroundImage: `url(${player.imageUrl})` } : { backgroundColor: '#2a2a2a' }}>
+        {!player.hasRealPhoto && (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+            fontSize: '1.2rem',
+            color: '#666',
+            fontWeight: '500'
+          }}>
+            No image available
+          </div>
+        )}
         <div className="card-overlay">
           <div className="card-content">
             <h2>{player.name}</h2>
