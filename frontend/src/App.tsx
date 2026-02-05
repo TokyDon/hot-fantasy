@@ -38,9 +38,21 @@ function App() {
 
   const fetchPlayers = async () => {
     try {
-      const response = await fetch('/api/players');
+      const apiUrl = import.meta.env.PROD 
+        ? 'https://hot-fantasy-1.onrender.com/api/players'
+        : '/api/players';
+      const response = await fetch(apiUrl);
       const data = await response.json();
       setPlayers(data);
+      
+      // Load saved progress from localStorage
+      const savedIndex = localStorage.getItem('currentIndex');
+      const savedTeam = localStorage.getItem('team');
+      const savedHistory = localStorage.getItem('swipeHistory');
+      
+      if (savedIndex) setCurrentIndex(parseInt(savedIndex));
+      if (savedTeam) setTeam(JSON.parse(savedTeam));
+      if (savedHistory) setSwipeHistory(JSON.parse(savedHistory));
     } catch (error) {
       console.error('Error fetching players:', error);
     }
@@ -52,8 +64,27 @@ function App() {
     // Hide hint after first swipe
     if (showHint) setShowHint(false);
     
+    const newIndex = currentIndex + 1;
+    const newHistory = [...swipeHistory, { player, direction, index: currentIndex }];
+    const newTeam = direction === 'right' ? [...team, player] : team;
+    
+    // Update state
+    setSwipeHistory(newHistory);
+    if (direction === 'right') {
+      setTeam(newTeam);
+    }
+    setCurrentIndex(newIndex);
+    
+    // Save to localStorage
+    localStorage.setItem('currentIndex', newIndex.toString());
+    localStorage.setItem('team', JSON.stringify(newTeam));
+    localStorage.setItem('swipeHistory', JSON.stringify(newHistory));
+    
     try {
-      await fetch('/api/swipes', {
+      const apiUrl = import.meta.env.PROD 
+        ? 'https://hot-fantasy-1.onrender.com/api/swipes'
+        : '/api/swipes';
+      await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -61,26 +92,22 @@ function App() {
           playerId: player.id,
           direction
         })
-      });
-
-      // Add to swipe history
-      setSwipeHistory(prev => [...prev, { player, direction, index: currentIndex }]);
-
-      if (direction === 'right') {
-        setTeam(prev => [...prev, player]);
-      }
-
-      setCurrentIndex(prev => prev + 1);
-    } catch (error) {
-      console.error('Error recording swipe:', error);
+    const newHistory = swipeHistory.slice(0, -1);
+    const newTeam = lastSwipe.direction === 'right' 
+      ? team.filter(p => p.id !== lastSwipe.player.id)
+      : team;
+    
+    // Update state
+    setSwipeHistory(newHistory);
+    if (lastSwipe.direction === 'right') {
+      setTeam(newTeam);
     }
-  };
-
-  const handleUndo = () => {
-    if (swipeHistory.length === 0) return;
+    setCurrentIndex(lastSwipe.index);
     
-    const lastSwipe = swipeHistory[swipeHistory.length - 1];
-    
+    // Save to localStorage
+    localStorage.setItem('currentIndex', lastSwipe.index.toString());
+    localStorage.setItem('team', JSON.stringify(newTeam));
+    localStorage.setItem('swipeHistory', JSON.stringify(newHistory)
     // Remove from history
     setSwipeHistory(prev => prev.slice(0, -1));
     
@@ -139,6 +166,9 @@ function App() {
             <p>You've reviewed all {players.length} players</p>
             <button className="btn-primary" onClick={() => setShowTeam(true)}>
               View Your Team ({team.length} players)
+            </button>
+            <button className="btn-primary" onClick={handleReset} style={{ marginTop: '1rem', background: 'linear-gradient(135deg, #ff6b6b, #ee5a52)' }}>
+              Start Over
             </button>
           </div>
         )}
