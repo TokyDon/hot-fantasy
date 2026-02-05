@@ -1,0 +1,17 @@
+{
+  "name": "hot-fantasy",
+  "version": "1.0.0",
+  "description": "Fantasy sports team builder with Tinder-like swipe interface",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm run dev",
+    "client": "cd frontend && npm run dev",
+    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install"
+  },
+  "keywords": ["fantasy", "sports", "tinder", "swipe"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
