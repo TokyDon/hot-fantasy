@@ -4,9 +4,10 @@ import './Team.css';
 interface TeamProps {
   team: Player[];
   onBack: () => void;
+  onRemovePlayer: (playerId: string) => void;
 }
 
-export default function Team({ team, onBack }: TeamProps) {
+export default function Team({ team, onBack, onRemovePlayer }: TeamProps) {
   return (
     <div className="team-view">
       <header className="team-header">
@@ -35,9 +36,28 @@ export default function Team({ team, onBack }: TeamProps) {
             <div key={player.id} className="team-card">
               <div 
                 className="team-card-image" 
-                style={{ backgroundImage: `url(${player.imageUrl})` }}
+                style={player.hasRealPhoto ? { backgroundImage: `url(${player.imageUrl})` } : { backgroundColor: '#2a2a2a' }}
               >
-                <div className="team-badge">❤️</div>
+                {!player.hasRealPhoto && (
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '100%',
+                    fontSize: '0.9rem',
+                    color: '#666',
+                    fontWeight: '500'
+                  }}>
+                    No image available
+                  </div>
+                )}
+                <button 
+                  className="team-badge"
+                  onClick={() => onRemovePlayer(player.id)}
+                  title="Remove from team"
+                >
+                  ❤️
+                </button>
               </div>
               <div className="team-card-info">
                 <h3>{player.name}</h3>

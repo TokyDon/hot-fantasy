@@ -129,12 +129,31 @@ function App() {
     localStorage.removeItem('swipeHistory');
   };
 
+  const handleRemoveFromTeam = (playerId: string) => {
+    const newTeam = team.filter(p => p.id !== playerId);
+    setTeam(newTeam);
+    localStorage.setItem('team', JSON.stringify(newTeam));
+    
+    // Also update swipe history to mark as left swipe
+    const newHistory = swipeHistory.map(swipe => 
+      swipe.player.id === playerId 
+        ? { ...swipe, direction: 'left' as const }
+        : swipe
+    );
+    setSwipeHistory(newHistory);
+    localStorage.setItem('swipeHistory', JSON.stringify(newHistory));
+  };
+
   const currentPlayer = players[currentIndex];
 
   if (showTeam) {
     return (
       <div className="app">
-        <Team team={team} onBack={() => setShowTeam(false)} />
+        <Team 
+          team={team} 
+          onBack={() => setShowTeam(false)}
+          onRemovePlayer={handleRemoveFromTeam}
+        />
       </div>
     );
   }
