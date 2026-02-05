@@ -4,15 +4,15 @@
     "team": "England",
     "position": "Hooker",
     "club": "Sale Sharks",
-    "image": "",
-    "hasRealPhoto": false
+    "image": "https://r2.thesportsdb.com/images/media/player/cutout/29007506.png",
+    "hasRealPhoto": true
   },
   {
     "name": "Theo Dan",
     "team": "England",
     "position": "Hooker",
     "club": "Saracens",
-    "image": "https://r2.thesportsdb.com/images/media/player/thumb/le8fvb1738525686.jpg",
+    "image": "https://r2.thesportsdb.com/images/media/player/cutout/5nhmmg1738525722.png",
     "hasRealPhoto": true
   },
   {
@@ -20,7 +20,7 @@
     "team": "England",
     "position": "Hooker",
     "club": "Saracens",
-    "image": "https://r2.thesportsdb.com/images/media/player/thumb/yhbb2z1580732403.jpg",
+    "image": "https://r2.thesportsdb.com/images/media/player/cutout/u3kgvh1582329486.png",
     "hasRealPhoto": true
   },
   {
@@ -28,7 +28,7 @@
     "team": "England",
     "position": "Prop",
     "club": "Northampton Saints",
-    "image": "https://r2.thesportsdb.com/images/media/player/thumb/9sy7f91720097348.jpg",
+    "image": "https://r2.thesportsdb.com/images/media/player/cutout/6083ig1720097488.png",
     "hasRealPhoto": true
   },
   {
@@ -36,7 +36,7 @@
     "team": "England",
     "position": "Prop",
     "club": "Bristol Bears",
-    "image": "https://r2.thesportsdb.com/images/media/player/thumb/eecqz31581607595.jpg",
+    "image": "https://r2.thesportsdb.com/images/media/player/cutout/erh79t1612278153.png",
     "hasRealPhoto": true
   },
   {
@@ -44,7 +44,7 @@
     "team": "England",
     "position": "Prop",
     "club": "Leicester Tigers",
-    "image": "https://r2.thesportsdb.com/images/media/player/thumb/tm4pgg1738525974.jpg",
+    "image": "https://r2.thesportsdb.com/images/media/player/cutout/jjkgv51738526120.png",
     "hasRealPhoto": true
   },
   {
@@ -52,15 +52,15 @@
     "team": "England",
     "position": "Prop",
     "club": "Northampton Saints",
-    "image": "",
-    "hasRealPhoto": false
+    "image": "https://r2.thesportsdb.com/images/media/player/cutout/12014438.png",
+    "hasRealPhoto": true
   },
   {
     "name": "Bevan Rodd",
     "team": "England",
     "position": "Prop",
     "club": "Sale Sharks",
-    "image": "https://r2.thesportsdb.com/images/media/player/thumb/xlxlwx1738526812.jpg",
+    "image": "https://r2.thesportsdb.com/images/media/player/cutout/ervy5o1738526896.png",
     "hasRealPhoto": true
   },
   {
@@ -68,15 +68,15 @@
     "team": "England",
     "position": "Prop",
     "club": "Bath",
-    "image": "",
-    "hasRealPhoto": false
+    "image": "https://r2.thesportsdb.com/images/media/player/thumb/xecma21756723543.jpg",
+    "hasRealPhoto": true
   },
   {
     "name": "Ollie Chessum",
     "team": "England",
     "position": "Lock",
     "club": "Leicester Tigers",
-    "image": "https://r2.thesportsdb.com/images/media/player/thumb/3rtcw51738524780.jpg",
+    "image": "https://r2.thesportsdb.com/images/media/player/cutout/tq7ley1738524866.png",
     "hasRealPhoto": true
   },
   {
@@ -84,15 +84,15 @@
     "team": "England",
     "position": "Lock",
     "club": "Gloucester",
-    "image": "",
-    "hasRealPhoto": false
+    "image": "https://r2.thesportsdb.com/images/media/player/thumb/vmepeo1542980493.jpg",
+    "hasRealPhoto": true
   },
   {
     "name": "Alex Coles",
     "team": "England",
     "position": "Lock",
     "club": "Northampton Saints",
-    "image": "https://r2.thesportsdb.com/images/media/player/thumb/ap24il1720097834.jpg",
+    "image": "https://r2.thesportsdb.com/images/media/player/cutout/wt00xc1720097861.png",
     "hasRealPhoto": true
   },
   {
@@ -100,7 +100,7 @@
     "team": "England",
     "position": "Lock",
     "club": "Saracens",
-    "image": "https://r2.thesportsdb.com/images/media/player/thumb/2yh3y91581695070.jpg",
+    "image": "https://r2.thesportsdb.com/images/media/player/cutout/mhj7g31738526218.png",
     "hasRealPhoto": true
   },
   {
@@ -108,15 +108,15 @@
     "team": "England",
     "position": "Back row",
     "club": "Harlequins",
-    "image": "",
-    "hasRealPhoto": false
+    "image": "https://r2.thesportsdb.com/images/media/player/cutout/fcapjn1685036101.png",
+    "hasRealPhoto": true
   },
   {
     "name": "Tom Curry",
     "team": "England",
     "position": "Back row",
     "club": "Sale Sharks",
-    "image": "https://r2.thesportsdb.com/images/media/player/thumb/2thgoq1582318399.jpg",
+    "image": "https://r2.thesportsdb.com/images/media/player/cutout/trpzho1582318858.png",
     "hasRealPhoto": true
   },
   {
@@ -124,7 +124,7 @@
     "team": "England",
     "position": "Back row",
     "club": "Saracens",
-    "image": "https://r2.thesportsdb.com/images/media/player/thumb/txbt2o1582319597.jpg",
+    "image": "https://r2.thesportsdb.com/images/media/player/cutout/rdkdwy1582319285.png",
     "hasRealPhoto": true
   },
   {
@@ -140,7 +140,7 @@
     "team": "England",
     "position": "Back row",
     "club": "Bath",
-    "image": "https://r2.thesportsdb.com/images/media/player/thumb/3o6np41760732785.jpg",
+    "image": "https://r2.thesportsdb.com/images/media/player/cutout/vxa7xt1760732837.png",
     "hasRealPhoto": true
   },
   {
@@ -156,7 +156,7 @@
     "team": "England",
     "position": "Back row",
     "club": "Bath",
-    "image": "https://r2.thesportsdb.com/images/media/player/thumb/zbjibl1582314083.jpg",
+    "image": "https://r2.thesportsdb.com/images/media/player/cutout/vjtcj01738588442.png",
     "hasRealPhoto": true
   },
   {
@@ -164,7 +164,7 @@
     "team": "England",
     "position": "Scrum-half",
     "club": "Northampton Saints",
-    "image": "https://r2.thesportsdb.com/images/media/player/thumb/ezqbbj1582623704.jpg",
+    "image": "https://r2.thesportsdb.com/images/media/player/cutout/sgn5yq1613394147.png",
     "hasRealPhoto": true
   },
   {
@@ -172,7 +172,7 @@
     "team": "England",
     "position": "Scrum-half",
     "club": "Bath",
-    "image": "https://r2.thesportsdb.com/images/media/player/thumb/pgxy3n1756825384.jpg",
+    "image": "https://r2.thesportsdb.com/images/media/player/cutout/ec6u9e1760733271.png",
     "hasRealPhoto": true
   },
   {
@@ -180,15 +180,15 @@
     "team": "England",
     "position": "Scrum-half",
     "club": "Leicester Tigers",
-    "image": "",
-    "hasRealPhoto": false
+    "image": "https://r2.thesportsdb.com/images/media/player/cutout/93g2gy1654098512.png",
+    "hasRealPhoto": true
   },
   {
     "name": "George Ford",
     "team": "England",
     "position": "Fly-half",
     "club": "Sale Sharks",
-    "image": "https://r2.thesportsdb.com/images/media/player/thumb/93yt5x1582625157.jpg",
+    "image": "https://r2.thesportsdb.com/images/media/player/cutout/7ti9s31612277504.png",
     "hasRealPhoto": true
   },
   {
@@ -196,7 +196,7 @@
     "team": "England",
     "position": "Fly-half",
     "club": "Harlequins",
-    "image": "https://r2.thesportsdb.com/images/media/player/thumb/1f966n1612185770.jpg",
+    "image": "https://r2.thesportsdb.com/images/media/player/cutout/08fs4q1612189314.png",
     "hasRealPhoto": true
   },
   {
@@ -204,15 +204,15 @@
     "team": "England",
     "position": "Centre",
     "club": "Gloucester",
-    "image": "",
-    "hasRealPhoto": false
+    "image": "https://r2.thesportsdb.com/images/media/player/cutout/5123107.png",
+    "hasRealPhoto": true
   },
   {
     "name": "Fraser Dingwall",
     "team": "England",
     "position": "Centre",
     "club": "Northampton Saints",
-    "image": "https://r2.thesportsdb.com/images/media/player/thumb/pk1ql11582644551.jpg",
+    "image": "https://r2.thesportsdb.com/images/media/player/cutout/zzuida1613393996.png",
     "hasRealPhoto": true
   },
   {
@@ -220,24 +220,24 @@
     "team": "England",
     "position": "Centre",
     "club": "Bath",
-    "image": "https://r2.thesportsdb.com/images/media/player/thumb/3x7hy71756825168.jpg",
-    "hasRealPhoto": true
+    "image": "",
+    "hasRealPhoto": false
   },
   {
     "name": "Henry Slade",
     "team": "England",
     "position": "Centre",
     "club": "Exeter Chiefs",
-    "image": "https://r2.thesportsdb.com/images/media/player/thumb/zm69gs1582644016.jpg",
-    "hasRealPhoto": true
+    "image": "",
+    "hasRealPhoto": false
   },
   {
     "name": "Henry Arundell",
     "team": "England",
     "position": "Wing",
     "club": "Bath",
-    "image": "https://r2.thesportsdb.com/images/media/player/thumb/0d1aj01764704596.jpg",
-    "hasRealPhoto": true
+    "image": "",
+    "hasRealPhoto": false
   },
   {
     "name": "Imman Feyi-Waboso",
