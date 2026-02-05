@@ -255,6 +255,54 @@ const squads = {
   ]
 };
 
+// Function to get player photo from Wikipedia
+function fetchWikipediaPhoto(playerName) {
+  return new Promise((resolve) => {
+    // Search for the player on Wikipedia
+    const searchUrl = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(playerName + ' rugby')}&format=json&origin=*`;
+    
+    https.get(searchUrl, (res) => {
+      let data = '';
+      res.on('data', (chunk) => { data += chunk; });
+      res.on('end', () => {
+        try {
+          const json = JSON.parse(data);
+          if (json.query && json.query.search && json.query.search.length > 0) {
+            const pageTitle = json.query.search[0].title;
+            
+            // Get the page image
+            const imageUrl = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(pageTitle)}&prop=pageimages&format=json&pithumbsize=800&origin=*`;
+            
+            https.get(imageUrl, (imageRes) => {
+              let imageData = '';
+              imageRes.on('data', (chunk) => { imageData += chunk; });
+              imageRes.on('end', () => {
+                try {
+                  const imageJson = JSON.parse(imageData);
+                  const pages = imageJson.query.pages;
+                  const page = Object.values(pages)[0];
+                  
+                  if (page.thumbnail && page.thumbnail.source) {
+                    resolve({ found: true, photo: page.thumbnail.source, source: 'Wikipedia' });
+                  } else {
+                    resolve({ found: false });
+                  }
+                } catch (e) {
+                  resolve({ found: false });
+                }
+              });
+            }).on('error', () => resolve({ found: false }));
+          } else {
+            resolve({ found: false });
+          }
+        } catch (e) {
+          resolve({ found: false });
+        }
+      });
+    }).on('error', () => resolve({ found: false }));
+  });
+}
+
 // Function to query TheSportsDB API
 function fetchPlayerPhoto(playerName) {
   return new Promise((resolve) => {
@@ -292,18 +340,32 @@ async function processAllPlayers() {
   const allPlayers = [];
   let playersWithPhotos = 0;
   let playersWithoutPhotos = 0;
+  let wikipediaPhotos = 0;
+  let sportsDbPhotos = 0;
 
   for (const [country, players] of Object.entries(squads)) {
     console.log(`\nProcessing ${country}...`);
     
     for (const player of players) {
-      const photo = await fetchPlayerPhoto(player.name);
+      // Try Wikipedia first
+      let photo = await fetchWikipediaPhoto(player.name);
+      
+      if (photo.found) {
+        wikipediaPhotos++;
+      } else {
+        // Fall back to TheSportsDB
+        photo = await fetchPlayerPhoto(player.name);
+        if (photo.found) {
+          sportsDbPhotos++;
+        }
+      }
+      
       const playerData = {
         name: player.name,
         team: country,
         position: player.position,
         club: player.team,
-        image: photo.found ? photo.photo : 'https://i.pravatar.cc/800?img=' + Math.floor(Math.random() * 70),
+        image: photo.found ? photo.photo : '',
         hasRealPhoto: photo.found
       };
       
@@ -311,21 +373,23 @@ async function processAllPlayers() {
       
       if (photo.found) {
         playersWithPhotos++;
-        console.log(`✓ ${player.name} - Photo found`);
+        console.log(`✓ ${player.name} - Photo found (${photo.source || 'TheSportsDB'})`);
       } else {
         playersWithoutPhotos++;
-        console.log(`✗ ${player.name} - No photo (using placeholder)`);
+        console.log(`✗ ${player.name} - No photo available`);
       }
       
-      // Rate limit: wait 100ms between requests
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // Rate limit: wait 150ms between requests
+      await new Promise(resolve => setTimeout(resolve, 150));
     }
   }
 
   console.log(`\n========================================`);
   console.log(`Total players: ${allPlayers.length}`);
   console.log(`With real photos: ${playersWithPhotos}`);
-  console.log(`With placeholders: ${playersWithoutPhotos}`);
+  console.log(`  - From Wikipedia: ${wikipediaPhotos}`);
+  console.log(`  - From TheSportsDB: ${sportsDbPhotos}`);
+  console.log(`Without photos: ${playersWithoutPhotos}`);
   console.log(`========================================\n`);
 
   // Save to file
