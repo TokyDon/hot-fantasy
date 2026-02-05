@@ -37,7 +37,7 @@ export interface SwipeData {
 
 // Load complete Six Nations 2026 squads from generated data
 const playersData = JSON.parse(
-  readFileSync(join(__dirname, '../../scripts/players-data.json'), 'utf-8')
+  readFileSync(join(__dirname, 'players-data.json'), 'utf-8')
 );
 
 // Transform player data into the expected format with stats
