@@ -35,7 +35,7 @@ export interface SwipeData {
   direction: 'left' | 'right';
 }
 
-// Load complete Six Nations 2026 squads from generated data
+// Load complete Six Nations 2026 squads from generated data (237 players)
 const playersData = JSON.parse(
   readFileSync(join(__dirname, 'players-data.json'), 'utf-8')
 );
