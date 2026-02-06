@@ -45,7 +45,7 @@ const playersData = JSON.parse(
   readFileSync(join(__dirname, 'players-data.json'), 'utf-8')
 );
 
-// Transform player data into the expected format with stats
+// Transform player data into the expected format
 const players: Player[] = playersData.map((player: any, index: number) => ({
   id: (index + 1).toString(),
   name: player.name,
@@ -55,12 +55,7 @@ const players: Player[] = playersData.map((player: any, index: number) => ({
   club: player.club,
   imageUrl: player.image,
   hasRealPhoto: player.hasRealPhoto,
-  stats: {
-    // Random realistic stats based on position
-    points: Math.floor(Math.random() * 150) + 50,
-    tries: Math.floor(Math.random() * 25) + 5,
-    tackles: Math.floor(Math.random() * 100) + 40
-  }
+  stats: {}
 }));
 
 const userSwipes: Map<string, SwipeData[]> = new Map();

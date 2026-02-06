@@ -105,14 +105,6 @@ export default function SwipeCard({ player, onSwipe }: SwipeCardProps) {
             <h2>{player.name}</h2>
             <p className="team">{player.team}</p>
             <p className="position">{player.position}</p>
-            <div className="stats">
-              {Object.entries(player.stats).map(([key, value]) => (
-                <div key={key} className="stat">
-                  <span className="stat-value">{value}</span>
-                  <span className="stat-label">{key}</span>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </div>

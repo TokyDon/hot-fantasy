@@ -65,14 +65,6 @@ export default function Team({ team, onBack, onRemovePlayer }: TeamProps) {
                   <span className="team-flag">{player.team}</span>
                   <span className="team-position">{player.position}</span>
                 </div>
-                <div className="player-stats-compact">
-                  {Object.entries(player.stats).slice(0, 3).map(([key, value]) => (
-                    <div key={key} className="stat-compact">
-                      <span className="stat-compact-value">{value}</span>
-                      <span className="stat-compact-label">{key}</span>
-                    </div>
-                  ))}
-                </div>
               </div>
             </div>
           ))}

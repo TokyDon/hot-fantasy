@@ -1,9 +1,11 @@
 .team-view {
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
   max-width: 500px;
   margin: 0 auto;
-  padding-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .team-header {
@@ -102,7 +104,9 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
   gap: 0.875rem;
-  padding: 0 0.875rem;
+  padding: 0 0.875rem 2rem;
+  overflow-y: auto;
+  flex: 1;
 }
 
 .team-card {
