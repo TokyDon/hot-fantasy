@@ -4,10 +4,10 @@
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: 0.5rem;
   width: 100%;
   max-width: none;
-  height: 100%;
+  height: auto;
   border-radius: 24px;
   overflow: hidden;
   cursor: grab;
