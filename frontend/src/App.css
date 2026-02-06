@@ -71,6 +71,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
   height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
 }
 
 /* Animated background gradient */
@@ -97,6 +98,7 @@ body::before {
 
 .app {
   height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   position: relative;
   z-index: 1;
   overflow: hidden;
@@ -104,6 +106,7 @@ body::before {
 
 .main-content {
   height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   padding-top: 4.5rem;
   padding-bottom: 4rem;
   max-width: 100%;
@@ -355,6 +358,7 @@ body::before {
   backdrop-filter: blur(20px) saturate(160%);
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   padding: 0.5rem 1rem;
+  padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
   display: flex;
   justify-content: center;
   gap: 0.5rem;
@@ -496,6 +500,7 @@ body::before {
   
   .bottom-nav {
     padding: 0.375rem 0.75rem;
+    padding-bottom: calc(0.375rem + env(safe-area-inset-bottom));
   }
   
   .nav-btn {
