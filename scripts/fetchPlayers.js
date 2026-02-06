@@ -303,36 +303,84 @@ function fetchWikipediaPhoto(playerName) {
   });
 }
 
-// Function to query TheSportsDB API
-function fetchPlayerPhoto(playerName) {
-  return new Promise((resolve) => {
-    const url = `https://www.thesportsdb.com/api/v1/json/3/searchplayers.php?p=${encodeURIComponent(playerName)}`;
-    
-    https.get(url, (res) => {
-      let data = '';
-      res.on('data', (chunk) => { data += chunk; });
-      res.on('end', () => {
-        try {
-          const json = JSON.parse(data);
-          if (json.player && json.player.length > 0) {
-            // Find rugby player specifically
-            const rugbyPlayer = json.player.find(p => p.strSport === 'Rugby');
-            if (rugbyPlayer && rugbyPlayer.strThumb) {
-              resolve({ found: true, photo: rugbyPlayer.strThumb, cutout: rugbyPlayer.strCutout });
-            } else {
-              resolve({ found: false });
-            }
-          } else {
-            resolve({ found: false });
-          }
-        } catch (e) {
-          resolve({ found: false });
+// Function to make API request with retry logic for rate limiting
+async function makeAPIRequest(url, retries = 5, baseDelay = 3000) {
+  for (let attempt = 0; attempt < retries; attempt++) {
+    const result = await new Promise((resolve) => {
+      https.get(url, (res) => {
+        // Check for rate limiting
+        if (res.statusCode === 429) {
+          resolve({ rateLimited: true, statusCode: 429 });
+          return;
         }
+        
+        let data = '';
+        res.on('data', (chunk) => { data += chunk; });
+        res.on('end', () => {
+          try {
+            const json = JSON.parse(data);
+            resolve({ success: true, data: json });
+          } catch (e) {
+            resolve({ success: false, error: 'Parse error' });
+          }
+        });
+      }).on('error', (err) => {
+        resolve({ success: false, error: err.message });
       });
-    }).on('error', () => {
-      resolve({ found: false });
     });
-  });
+    
+    if (result.rateLimited) {
+      const delay = baseDelay * Math.pow(2, attempt);
+      console.log(`  ⚠ Rate limited, waiting ${delay/1000}s before retry (attempt ${attempt + 1}/${retries})...`);
+      await new Promise(r => setTimeout(r, delay));
+      continue;
+    }
+    
+    return result;
+  }
+  
+  return { success: false, error: 'Max retries exceeded' };
+}
+
+// Function to query TheSportsDB API with multiple name variations
+async function fetchPlayerPhoto(playerName) {
+  // Try different name variations
+  const nameParts = playerName.split(' ');
+  const nameWithoutHyphens = playerName.replace(/-/g, ' ');
+  const searchVariations = [
+    playerName,
+    nameWithoutHyphens,
+    nameParts.filter(n => n.length > 2).join(' '),
+    nameParts.length > 1 ? `${nameParts[nameParts.length - 1]}, ${nameParts[0]}` : playerName,
+    nameParts.length > 2 ? `${nameParts[0]} ${nameParts[nameParts.length - 1]}` : playerName,
+    nameParts[nameParts.length - 1]
+  ];
+  
+  const uniqueVariations = [...new Set(searchVariations)];
+  
+  for (const variation of uniqueVariations) {
+    const url = `https://www.thesportsdb.com/api/v1/json/3/searchplayers.php?p=${encodeURIComponent(variation)}`;
+    
+    const response = await makeAPIRequest(url);
+    
+    if (response.success && response.data.player && response.data.player.length > 0) {
+      const rugbyPlayer = response.data.player.find(p => 
+        p.strSport === 'Rugby' || p.strSport === 'Rugby Union' || p.strSport === 'Rugby League'
+      );
+      
+      if (rugbyPlayer) {
+        const photo = rugbyPlayer.strCutout || rugbyPlayer.strThumb || rugbyPlayer.strFanart1;
+        if (photo) {
+          return { found: true, photo };
+        }
+      }
+    }
+    
+    // Small delay between variations
+    await new Promise(r => setTimeout(r, 200));
+  }
+  
+  return { found: false };
 }
 
 // Process all players
@@ -340,25 +388,14 @@ async function processAllPlayers() {
   const allPlayers = [];
   let playersWithPhotos = 0;
   let playersWithoutPhotos = 0;
-  let wikipediaPhotos = 0;
-  let sportsDbPhotos = 0;
 
   for (const [country, players] of Object.entries(squads)) {
-    console.log(`\nProcessing ${country}...`);
+    console.log(`\n${'='.repeat(50)}`);
+    console.log(`Processing ${country} (${players.length} players)...`);
+    console.log('='.repeat(50));
     
     for (const player of players) {
-      // Try Wikipedia first
-      let photo = await fetchWikipediaPhoto(player.name);
-      
-      if (photo.found) {
-        wikipediaPhotos++;
-      } else {
-        // Fall back to TheSportsDB
-        photo = await fetchPlayerPhoto(player.name);
-        if (photo.found) {
-          sportsDbPhotos++;
-        }
-      }
+      const photo = await fetchPlayerPhoto(player.name);
       
       const playerData = {
         name: player.name,
@@ -373,24 +410,24 @@ async function processAllPlayers() {
       
       if (photo.found) {
         playersWithPhotos++;
-        console.log(`✓ ${player.name} - Photo found (${photo.source || 'TheSportsDB'})`);
+        console.log(`✓ ${player.name} - Photo found`);
       } else {
         playersWithoutPhotos++;
         console.log(`✗ ${player.name} - No photo available`);
       }
       
-      // Rate limit: wait 1000ms between requests to completely avoid throttling
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Rate limit: wait 1.5 seconds between players to avoid throttling
+      await new Promise(resolve => setTimeout(resolve, 1500));
     }
   }
 
-  console.log(`\n========================================`);
+  console.log(`\n${'='.repeat(50)}`);
+  console.log(`FINAL RESULTS`);
+  console.log('='.repeat(50));
   console.log(`Total players: ${allPlayers.length}`);
-  console.log(`With real photos: ${playersWithPhotos}`);
-  console.log(`  - From Wikipedia: ${wikipediaPhotos}`);
-  console.log(`  - From TheSportsDB: ${sportsDbPhotos}`);
+  console.log(`With real photos: ${playersWithPhotos} (${Math.round(playersWithPhotos/allPlayers.length*100)}%)`);
   console.log(`Without photos: ${playersWithoutPhotos}`);
-  console.log(`========================================\n`);
+  console.log('='.repeat(50));
 
   // Save to file
   fs.writeFileSync(
@@ -398,7 +435,7 @@ async function processAllPlayers() {
     JSON.stringify(allPlayers, null, 2)
   );
   
-  console.log('Player data saved to players-data.json');
+  console.log(`\n✓ Player data saved to players-data.json`);
   return allPlayers;
 }
 
