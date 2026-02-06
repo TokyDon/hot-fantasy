@@ -103,8 +103,10 @@ export default function SwipeCard({ player, onSwipe }: SwipeCardProps) {
         <div className="card-overlay">
           <div className="card-content">
             <h2>{player.name}</h2>
-            <p className="team">{player.team}</p>
-            <p className="position">{player.position}</p>
+            <div className="player-meta">
+              <p className="team">{player.team}</p>
+              <p className="position">{player.position}</p>
+            </div>
           </div>
         </div>
       </div>

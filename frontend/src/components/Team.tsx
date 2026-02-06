@@ -18,7 +18,6 @@ export default function Team({ team, onBack, onRemovePlayer }: TeamProps) {
           <h1>🔥 Your Hot Squad</h1>
           <p className="team-count">{team.length} player{team.length !== 1 ? 's' : ''} selected</p>
         </div>
-        <div className="spacer"></div>
       </header>
 
       {team.length === 0 ? (
