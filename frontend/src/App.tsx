@@ -134,14 +134,19 @@ function App() {
     setTeam(newTeam);
     localStorage.setItem('team', JSON.stringify(newTeam));
     
-    // Also update swipe history to mark as left swipe
-    const newHistory = swipeHistory.map(swipe => 
-      swipe.player.id === playerId 
-        ? { ...swipe, direction: 'left' as const }
-        : swipe
-    );
+    // Remove player from swipe history so they can be swiped again
+    const removedSwipe = swipeHistory.find(swipe => swipe.player.id === playerId);
+    const newHistory = swipeHistory.filter(swipe => swipe.player.id !== playerId);
     setSwipeHistory(newHistory);
     localStorage.setItem('swipeHistory', JSON.stringify(newHistory));
+    
+    // If the removed player was swiped before the current index,
+    // move current index back by 1 so they appear in the deck again
+    if (removedSwipe && removedSwipe.index < currentIndex) {
+      const newIndex = currentIndex - 1;
+      setCurrentIndex(newIndex);
+      localStorage.setItem('currentIndex', newIndex.toString());
+    }
   };
 
   const currentPlayer = players[currentIndex];
